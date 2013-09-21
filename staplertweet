@@ -51,6 +51,9 @@ if options[:notweet]
   logger.info "--notweet specified; no tweeting will happen"
 end
 
+# Add some randomness ... every notweet_chance% of the time, no tweet will happen
+notweet_chance = 25
+
 settings = {}
 
 script_directory = File.dirname(__FILE__)
@@ -88,7 +91,11 @@ logger.debug "'#{tweet}'"
 
 unless options[:notweet]
   begin
-    Twitter.update(tweet)
+    if rand(1..100) <= notweet_chance
+      logger.debug "Randomly decided not to tweet"
+    else
+      Twitter.update(tweet) 
+    end
   rescue Exception => e
     logger.error "Error tweeting (#{tweet}): #{e}"
   end
