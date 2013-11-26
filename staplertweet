@@ -68,11 +68,11 @@ rescue Exception => e
   exit
 end
 
-Twitter.configure do |config|
+client = Twitter::REST::Client.new do |config|
   config.consumer_key       = settings["consumer_key"]
   config.consumer_secret    = settings["consumer_secret"]
-  config.oauth_token        = settings["access_token"]
-  config.oauth_token_secret = settings["access_token_secret"]
+  config.access_token        = settings["access_token"]
+  config.access_token_secret = settings["access_token_secret"]
 end
 
 # There's not much to this script.
@@ -94,7 +94,7 @@ unless options[:notweet]
     if rand(1..100) <= notweet_chance
       logger.debug "Randomly decided not to tweet"
     else
-      Twitter.update(tweet) 
+      client.update(tweet)
     end
   rescue Exception => e
     logger.error "Error tweeting (#{tweet}): #{e}"
